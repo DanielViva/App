@@ -42,9 +42,9 @@ import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 
-import com.varvet.barcodereadersample.R
-import com.varvet.barcodereadersample.camera.CameraSource
-import com.varvet.barcodereadersample.camera.CameraSourcePreview
+import com.example.vivad.app.R
+import com.example.vivad.app.camera.CameraSource
+import com.example.vivad.app.camera.CameraSourcePreview
 import kotlinx.android.synthetic.main.barcode_capture.*
 
 import java.io.IOException

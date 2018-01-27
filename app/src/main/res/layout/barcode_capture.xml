@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <com.varvet.barcodereadersample.camera.CameraSourcePreview
+    <com.example.vivad.app.camera.CameraSourcePreview
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></com.varvet.barcodereadersample.camera.CameraSourcePreview>
+        android:layout_weight="1"></com.example.vivad.app.camera.CameraSourcePreview>
 </LinearLayout>
