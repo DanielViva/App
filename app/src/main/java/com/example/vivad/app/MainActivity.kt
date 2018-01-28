@@ -1,117 +1,49 @@
 package com.example.vivad.app
 
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Toast
-import com.github.kittinunf.fuel.android.extension.responseJson
-import com.github.kittinunf.fuel.httpPost
-import com.github.kittinunf.fuel.core.ResponseDeserializable
-import com.google.gson.Gson
+import android.widget.Button
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.vision.barcode.Barcode
+import com.example.vivad.app.barcode.BarcodeCaptureActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-data class ResponseData(
-        val user: User
-){
-    class Deserializer: ResponseDeserializable<ResponseData> {
-        override fun deserialize(content: String): ResponseData? = Gson().fromJson(content, ResponseData::class.java)
-    }
-}
-
-data class User(
-        val first_name: String,
-        val last_name: String,
-        val email: String,
-        val location: String,
-        val avaliable: String,
-        val gender: String,
-        val birthday: String,
-        val created: String,
-        val last_login: String
-){
-    class Deserializer: ResponseDeserializable<User> {
-        override fun deserialize(content: String): User? = Gson().fromJson(content, User::class.java)
-    }
-}
-
-
 class MainActivity : AppCompatActivity() {
+
+    //private lateinit var result_textview: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val shape = GradientDrawable()
-        shape.shape = GradientDrawable.RECTANGLE
-        shape.setColor(Color.argb(0.2F,1f,1f,1f))
-        shape.cornerRadius = 80F
+        //result_textview = findViewById(R.id.result_textview)
 
-        val buttonAcessShape = GradientDrawable()
-        buttonAcessShape.shape = GradientDrawable.RECTANGLE
-        buttonAcessShape.setColor(Color.BLACK)
-        buttonAcessShape.cornerRadius = 80F
-
-        val buttonFacebookShape = GradientDrawable()
-        buttonFacebookShape.shape = GradientDrawable.RECTANGLE
-        buttonFacebookShape.setColor(Color.BLUE)
-        buttonFacebookShape.cornerRadius = 80F
-
-
-        userText.setBackground(shape)
-        passwordText.setBackground(shape)
-
-        facebook_access.setBackground(buttonFacebookShape)
-        access_button.setBackground(buttonAcessShape)
-
-
-
-        access_button.setOnClickListener {
-
-            val email = userText.text.toString()
-            val password = passwordText.text.toString()
-
-            val list = listOf("email" to email,"password" to password)
-
-            "http://painelgm7club.com.br/user/signin".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
-                val (data, err) = result
-
-                println(data)
-                if (data != null) {
-                    Toast.makeText(this@MainActivity, data.user.first_name, Toast.LENGTH_LONG).show()
-                }
-            }
-
+        scan_barcode_button.setOnClickListener {
+            val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
+            startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
-
-//                    .responseJson { request, response, result ->
-//                result.fold(success = { json ->
-//
-//                    val name = json.obj()["user"] as? Map<String, *>
-//                    if (name !=  null) {
-//                       Toast.makeText(this@MainActivity,"logado",Toast.LENGTH_LONG)
-//                        }else {
-//                        Toast.makeText(this@MainActivity,"não logado",Toast.LENGTH_LONG)
-//                    }
-//
-//
-//
-//
-//                }, failure = { error ->
-//                    Log.e("qdp error", error.toString())
-//                })
-//            }
-
-//        }
-        facebook_access.setOnClickListener {
-
-
-
-        }
-
-
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == BARCODE_READER_REQUEST_CODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
+                    //val p = barcode.cornerPoints
+                    result_textview.text = barcode.displayValue
+                } else
+                    result_textview.setText(R.string.no_barcode_captured)
+            } else
+                Log.e(LOG_TAG, String.format(getString(R.string.barcode_error_format),
+                        CommonStatusCodes.getStatusCodeString(resultCode)))
+        } else
+            super.onActivityResult(requestCode, resultCode, data)
+    }
 
+    companion object {
+        private val LOG_TAG = MainActivity::class.java.simpleName
+        private val BARCODE_READER_REQUEST_CODE = 1
+    }
 }

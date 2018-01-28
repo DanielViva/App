@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">App</string>
 
-    <!-- Strings related to MainActivity-->
+    <!-- Strings relatedLoginActivityvity-->
     <string name="scan_barcode_button">Scan barcode</string>
     <string name="no_barcode_captured">No barcode captured</string>
     <string name="barcode_error_format">"Error reading barcode: %1$s"</string>
