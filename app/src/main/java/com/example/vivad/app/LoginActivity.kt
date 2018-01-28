@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.view.Gravity
 import android.widget.Toast
 import com.github.kittinunf.fuel.httpPost
@@ -75,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
 
         val buttonAccessShape = GradientDrawable()
         buttonAccessShape.shape = GradientDrawable.RECTANGLE
-        buttonAccessShape.setColor(Color.BLACK)
+        buttonAccessShape.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAccessBlue,null))
         buttonAccessShape.cornerRadius = 80F
 
 
@@ -127,27 +128,6 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-//                    .responseJson { request, response, result ->
-//                result.fold(success = { json ->
-//
-//                    val name = json.obj()["user"] as? Map<String, *>
-//                    if (name !=  null) {
-//                       Toast.makeText(this@LoginActivity,"logado",Toast.LENGTH_LONG)
-//                        }else {
-//                        Toast.makeText(this@LoginActivity,"não logado",Toast.LENGTH_LONG)
-//                    }
-//
-//
-//
-//
-//                }, failure = { error ->
-//                    Log.e("qdp error", error.toString())
-//                })
-//            }
-
-//        }
-
-
     }
 
     private fun login(){
@@ -179,7 +159,7 @@ class LoginActivity : AppCompatActivity() {
 
         "http://painelgm7club.com.br/user/forgot".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
             val (data, err) = result
-            
+
             if (data != null) {
                 if (data.success) {
                     toast("Enviado!")

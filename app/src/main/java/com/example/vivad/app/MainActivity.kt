@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         val buttonScanShape = GradientDrawable()
         buttonScanShape.shape = GradientDrawable.RECTANGLE
-                buttonScanShape.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAccessBlue,null))
+        buttonScanShape.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAccessBlue,null))
         buttonScanShape.cornerRadius = 20F
 
         scan_barcode_button.setBackground(buttonScanShape)
