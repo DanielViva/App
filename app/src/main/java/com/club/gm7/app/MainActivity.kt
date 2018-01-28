@@ -48,8 +48,8 @@ class MainActivity : AppCompatActivity() {
              userBusiness.removeUser()
 
              val intent = Intent(applicationContext, LoginActivity::class.java)
-             startActivity(intent)
              finish()
+             startActivity(intent)
 
 
          }

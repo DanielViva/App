@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
         access_button.setBackground(buttonAccessShape)
 
         passwordText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
                 login()
                 return@OnKeyListener true
             }
@@ -139,7 +139,6 @@ class LoginActivity : AppCompatActivity() {
                 if (data.user != null) {
                     if (data.user.role == "place") {
                         mUserBusiness.saveUser(email, password)
-
                         val intent = Intent(this, MainActivity::class.java)
                         finish()
                         startActivity(intent)
