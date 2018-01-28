@@ -36,6 +36,9 @@ dependencies {
     compile 'com.github.kittinunf.fuel:fuel-rxjava:' + rootProject.fuelLibVersion
     compile 'com.google.code.gson:gson:2.7'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile "org.jetbrains.anko:anko-sdk15:${ANKO_VERSION}"
+    compile "org.jetbrains.anko:anko-appcompat-v7:${ANKO_VERSION}"
+    compile "org.jetbrains.anko:anko-recyclerview-v7:${ANKO_VERSION}"
     implementation 'com.android.support:design:26.1.0'
 }
 

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.Toast
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.core.ResponseDeserializable
@@ -15,10 +16,17 @@ import kotlinx.android.synthetic.main.activity_login.*
 import android.view.View.OnKeyListener
 import android.view.View
 import android.view.KeyEvent
+import android.widget.EditText
+import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.interceptors.validatorResponseInterceptor
+import com.google.gson.JsonParser
+import org.jetbrains.anko.*
 
 
 data class ResponseData(
-        val user: User
+        val success: Boolean,
+        val message: String,
+        val user: User?
 ){
     class Deserializer: ResponseDeserializable<ResponseData> {
         override fun deserialize(content: String): ResponseData? = Gson().fromJson(content, ResponseData::class.java)
@@ -84,7 +92,34 @@ class LoginActivity : AppCompatActivity() {
             false
         })
 
+        password_forgot.setOnClickListener {
 
+            var emailEditText: EditText? = null
+
+            alert("Esqueceu sua senha?") {
+                title = "Esqueceu sua senha?"
+                positiveButton("Enviar") {
+                    sendRecoveryPassword(emailEditText?.text.toString())
+                    }
+                customView {
+
+                    verticalLayout {
+                        textView {
+                            text = "Coloque seu endereço de e-mail cadastrado para enviarmos sua recuperação de senha"
+                            textSize = 16f
+                            gravity = Gravity.CENTER
+                        }
+
+                        emailEditText = editText {
+
+                        }
+
+                        padding = dip(20)
+                    }
+                }
+            }.show()
+
+        }
 
         access_button.setOnClickListener {
 
@@ -120,21 +155,54 @@ class LoginActivity : AppCompatActivity() {
         val password = passwordText.text.toString()
 
         val list = listOf("email" to email,"password" to password)
-
+        indeterminateProgressDialog("This a progress dialog").show()
         "http://painelgm7club.com.br/user/signin".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
             val (data, err) = result
 
-            println(data)
             if (data != null) {
+                if (data.user != null) {
+                    mUserBusiness.saveUser(email, password)
 
-                mUserBusiness.saveUser(email, password)
+                    val intent = Intent(this, MainActivity::class.java )
+                    finish()
+                    startActivity(intent)
+                    Toast.makeText(this@LoginActivity, data.user.first_name, Toast.LENGTH_LONG).show()
+                }
 
-                val intent = Intent(this, MainActivity::class.java )
-                finish()
-                startActivity(intent)
-                Toast.makeText(this@LoginActivity, data.user.first_name, Toast.LENGTH_LONG).show()
 
             }
         }
     }
+
+    private fun sendRecoveryPassword(email: String) {
+        val list = listOf("email" to email)
+
+        "http://painelgm7club.com.br/user/forgot".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
+            val (data, err) = result
+            
+            if (data != null) {
+                if (data.success) {
+                    toast("Enviado!")
+                } else {
+                    toast(data.message)
+                }
+
+            } else {
+                if (response.data.isEmpty()) {
+                    toast("Erro. Verifique sua conexão.")
+                } else {
+                    val json = JsonParser().parse(String(response.data)).asJsonObject
+                    if (json.has("message")) {
+                        toast(json["message"].asString)
+                    } else {
+                        toast("Erro.")
+                    }
+
+                }
+
+            }
+        }
+    }
+
 }
+

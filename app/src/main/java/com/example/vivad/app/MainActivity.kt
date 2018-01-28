@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         //result_textview = findViewById(R.id.result_textview)
 
+
+
+
+
         scan_barcode_button.setOnClickListener {
             val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
