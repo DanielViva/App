@@ -42,6 +42,7 @@ data class User(
         val avaliable: String,
         val gender: String,
         val birthday: String,
+        var role: String,
         val created: String,
         val last_login: String
 ){
@@ -135,21 +136,36 @@ class LoginActivity : AppCompatActivity() {
         val password = passwordText.text.toString()
 
         val list = listOf("email" to email,"password" to password)
-        indeterminateProgressDialog("This a progress dialog").show()
+        val loading = indeterminateProgressDialog("This a progress dialog")
+        loading.show()
         "http://painelgm7club.com.br/user/signin".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
             val (data, err) = result
-
+            loading.hide()
             if (data != null) {
                 if (data.user != null) {
-                    mUserBusiness.saveUser(email, password)
+                    if (data.user.role == "place") {
+                        mUserBusiness.saveUser(email, password)
 
-                    val intent = Intent(this, MainActivity::class.java )
-                    finish()
-                    startActivity(intent)
-                    Toast.makeText(this@LoginActivity, data.user.first_name, Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        finish()
+                        startActivity(intent)
+                        toast("Bem vindo ${data.user.first_name}")
+                    } else {
+                        toast("Usuário não tem permissão de acesso.")
+                    }
                 }
+            } else {
+                if (response.data.isEmpty()) {
+                    toast("Erro. Verifique sua conexão.")
+                } else {
+                    val json = JsonParser().parse(String(response.data)).asJsonObject
+                    if (json.has("message")) {
+                        toast(json["message"].asString)
+                    } else {
+                        toast("Erro.")
+                    }
 
-
+                }
             }
         }
     }
