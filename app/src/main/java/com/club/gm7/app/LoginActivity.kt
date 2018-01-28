@@ -1,4 +1,4 @@
-package com.example.vivad.app
+package com.club.gm7.app
 
 import android.content.Intent
 import android.graphics.Color
@@ -7,19 +7,16 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.view.Gravity
-import android.widget.Toast
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.Gson
-import com.example.vivad.app.MainActivity
-import com.example.vivad.app.business.UserBusiness
+import com.club.gm7.app.business.UserBusiness
 import kotlinx.android.synthetic.main.activity_login.*
-import android.view.View.OnKeyListener
 import android.view.View
 import android.view.KeyEvent
 import android.widget.EditText
 import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.fuel.core.interceptors.validatorResponseInterceptor
+import com.club.gm7.app.R
 import com.google.gson.JsonParser
 import org.jetbrains.anko.*
 
@@ -27,7 +24,8 @@ import org.jetbrains.anko.*
 data class ResponseData(
         val success: Boolean,
         val message: String,
-        val user: User?
+        val user: User?,
+        val token: String?
 ){
     class Deserializer: ResponseDeserializable<ResponseData> {
         override fun deserialize(content: String): ResponseData? = Gson().fromJson(content, ResponseData::class.java)
@@ -63,10 +61,9 @@ class LoginActivity : AppCompatActivity() {
         mUserBusiness = UserBusiness(this)
 
         val email = mUserBusiness.getStoredString("UserEmail")
+        val password = mUserBusiness.getStoredString("UserPassword")
         if (email != "") {
-            val intent = Intent(this, MainActivity::class.java )
-            startActivity(intent)
-            finish()
+            login(email, password)
         }
 
         val shape = GradientDrawable()
@@ -131,10 +128,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun login(){
-        val email = userText.text.toString()
-        val password = passwordText.text.toString()
-
+    private fun login(email: String, password: String){
         val list = listOf("email" to email,"password" to password)
         val loading = indeterminateProgressDialog("This a progress dialog")
         loading.show()
@@ -150,6 +144,9 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                         startActivity(intent)
                         toast("Bem vindo ${data.user.first_name}")
+                        if (data.token != null) {
+                            FuelManager.instance.baseHeaders = mapOf("Authorization" to "Bearer ${data.token}")
+                        }
                     } else {
                         toast("Usuário não tem permissão de acesso.")
                     }
@@ -168,6 +165,14 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+
+    private fun login(){
+        val email = userText.text.toString()
+        val password = passwordText.text.toString()
+
+        login(email, password)
     }
 
     private fun sendRecoveryPassword(email: String) {

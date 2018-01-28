@@ -1,4 +1,4 @@
-package com.example.vivad.app
+package com.club.gm7.app
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.example.vivad.app", appContext.packageName)
+        assertEquals("com.club.vivad.app", appContext.packageName)
     }
 }

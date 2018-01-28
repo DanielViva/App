@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.vivad.app.barcode
+package com.club.gm7.app.barcode
 
 import android.content.Context
 
-import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.Tracker
 import com.google.android.gms.vision.barcode.Barcode
 
-/**
- * Factory for creating a tracker and associated graphic to be associated with a new barcode.  The
- * multi-processor uses this factory to create barcode trackers as needed -- one for each barcode.
- */
-internal class BarcodeTrackerFactory(private val mContext: Context) : MultiProcessor.Factory<Barcode> {
+internal class BarcodeTracker(listener: Context) : Tracker<Barcode>() {
+    private val mListener: BarcodeGraphicTrackerCallback
 
-    override fun create(barcode: Barcode): Tracker<Barcode> {
-        return BarcodeTracker(mContext)
+    interface BarcodeGraphicTrackerCallback {
+        fun onDetectedQrCode(barcode: Barcode)
+    }
+
+    init {
+        mListener = listener as BarcodeGraphicTrackerCallback
+    }
+
+    override fun onNewItem(id: Int, item: Barcode?) {
+        if (item!!.displayValue != null) {
+            mListener.onDetectedQrCode(item)
+        }
     }
 }

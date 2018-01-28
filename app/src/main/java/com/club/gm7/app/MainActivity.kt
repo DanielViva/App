@@ -1,18 +1,21 @@
-package com.example.vivad.app
+package com.club.gm7.app
 
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Button
+import android.view.Gravity
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
-import com.example.vivad.app.barcode.BarcodeCaptureActivity
-import com.example.vivad.app.business.UserBusiness
+import com.club.gm7.app.barcode.BarcodeCaptureActivity
+import com.club.gm7.app.business.UserBusiness
+import com.github.kittinunf.fuel.httpPost
+import com.club.gm7.app.R
+import com.google.gson.JsonParser
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,9 +63,9 @@ class MainActivity : AppCompatActivity() {
                 if (data != null) {
                     val barcode = data.getParcelableExtra<Barcode>(BarcodeCaptureActivity.BarcodeObject)
                     //val p = barcode.cornerPoints
-                    result_textview.text = barcode.displayValue
+                    validate(barcode.displayValue)
                 } else
-                    result_textview.setText(R.string.no_barcode_captured)
+                    toast(R.string.no_barcode_captured)
             } else
                 Log.e(LOG_TAG, String.format(getString(R.string.barcode_error_format),
                         CommonStatusCodes.getStatusCodeString(resultCode)))
@@ -73,5 +76,56 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private val LOG_TAG = MainActivity::class.java.simpleName
         private val BARCODE_READER_REQUEST_CODE = 1
+    }
+
+    private fun validate(qr_code: String) {
+
+        val reg = Regex("((?<=_\\\$Club\\\$_)|(?=_\\\$Club\\\$_))")
+
+        var components = qr_code.split(reg)
+
+        if (components.count() != 3 ) {
+            toast("Código inválido")
+            return
+        }
+
+
+        val list = listOf("email" to components[2], "code" to components[0])
+        val loading = indeterminateProgressDialog("This a progress dialog")
+        loading.show()
+        "http://painelgm7club.com.br/place/validate".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
+            val (data, err) = result
+            loading.hide()
+            if (data != null) {
+                alert(data.message, "Validado") {
+                    positiveButton("Ok") {}
+                    customView {
+                        verticalLayout {
+                            gravity = Gravity.CENTER
+                            imageView(R.drawable.done_tick).lparams(300)
+                        }
+                    }
+
+                }.show()
+            } else {
+                if (response.data.isEmpty()) {
+                    alert("Erro. Verifique sua conexão."){
+                        positiveButton("Ok") {}
+                    }.show()
+                } else {
+                    val json = JsonParser().parse(String(response.data)).asJsonObject
+                    if (json.has("message")) {
+                        alert(json["message"].asString){
+                            positiveButton("Ok") {}
+                        }.show()
+                    } else {
+                        alert("Erro."){
+                            positiveButton("Ok") {}
+                        }.show()
+                    }
+
+                }
+            }
+        }
     }
 }

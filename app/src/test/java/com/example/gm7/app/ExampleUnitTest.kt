@@ -1,4 +1,4 @@
-package com.example.vivad.app
+package com.club.gm7.app
 
 import org.junit.Test
 

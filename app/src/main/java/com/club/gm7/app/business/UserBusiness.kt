@@ -1,8 +1,7 @@
-package com.example.vivad.app.business
+package com.club.gm7.app.business
 
 import android.content.Context
 import android.content.SharedPreferences
-import java.nio.channels.spi.AbstractSelectionKey
 
 class UserBusiness (context: Context) {
 

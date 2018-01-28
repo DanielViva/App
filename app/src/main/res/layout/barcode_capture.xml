@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <com.example.vivad.app.camera.CameraSourcePreview
+    <com.club.gm7.app.camera.CameraSourcePreview
         android:id="@+id/camera_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"></com.example.vivad.app.camera.CameraSourcePreview>
+        android:layout_weight="1"></com.club.gm7.app.camera.CameraSourcePreview>
 </LinearLayout>

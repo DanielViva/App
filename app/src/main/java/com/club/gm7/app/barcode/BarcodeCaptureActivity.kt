@@ -16,7 +16,7 @@
  * This file and all BarcodeXXX and CameraXXX files in this project edited by
  * Daniell Algar (included due to copyright reason)
  */
-package com.example.vivad.app.barcode
+package com.club.gm7.app.barcode
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -32,7 +32,6 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 
 import com.google.android.gms.common.ConnectionResult
@@ -42,9 +41,8 @@ import com.google.android.gms.vision.MultiProcessor
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 
-import com.example.vivad.app.R
-import com.example.vivad.app.camera.CameraSource
-import com.example.vivad.app.camera.CameraSourcePreview
+import com.club.gm7.app.R
+import com.club.gm7.app.camera.CameraSource
 import kotlinx.android.synthetic.main.barcode_capture.*
 
 import java.io.IOException

@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.example.vivad.app"
+        applicationId "com.club.vivad.app"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -37,8 +37,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile "org.jetbrains.anko:anko-sdk15:${ANKO_VERSION}"
+    compile "org.jetbrains.anko:anko-design:${ANKO_VERSION}"
     compile "org.jetbrains.anko:anko-appcompat-v7:${ANKO_VERSION}"
     compile "org.jetbrains.anko:anko-recyclerview-v7:${ANKO_VERSION}"
+    compile 'testfairy:testfairy-android-sdk:1.+@aar'
     implementation 'com.android.support:design:26.1.0'
 }
 
