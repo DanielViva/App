@@ -44,7 +44,7 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:selectAllOnFocus="false"
         android:singleLine="false"
         android:textAlignment="center"
@@ -73,27 +73,13 @@
         android:id="@+id/access_button"
         android:layout_width="250dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="60dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/colorAccessBlue"
         android:text="Acessar"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/facebook_access"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/facebook_access"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:background="#0084fd"
-        android:text="Facebook"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView11"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

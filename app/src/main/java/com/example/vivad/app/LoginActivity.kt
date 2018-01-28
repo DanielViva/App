@@ -12,6 +12,10 @@ import com.google.gson.Gson
 import com.example.vivad.app.MainActivity
 import com.example.vivad.app.business.UserBusiness
 import kotlinx.android.synthetic.main.activity_login.*
+import android.view.View.OnKeyListener
+import android.view.View
+import android.view.KeyEvent
+
 
 data class ResponseData(
         val user: User
@@ -61,46 +65,30 @@ class LoginActivity : AppCompatActivity() {
         shape.setColor(Color.argb(51,255,255,255))
         shape.cornerRadius = 80F
 
-        val buttonAcessShape = GradientDrawable()
-        buttonAcessShape.shape = GradientDrawable.RECTANGLE
-        buttonAcessShape.setColor(Color.BLACK)
-        buttonAcessShape.cornerRadius = 80F
+        val buttonAccessShape = GradientDrawable()
+        buttonAccessShape.shape = GradientDrawable.RECTANGLE
+        buttonAccessShape.setColor(Color.BLACK)
+        buttonAccessShape.cornerRadius = 80F
 
-        val buttonFacebookShape = GradientDrawable()
-        buttonFacebookShape.shape = GradientDrawable.RECTANGLE
-        buttonFacebookShape.setColor(Color.BLUE)
-        buttonFacebookShape.cornerRadius = 80F
 
 
         userText.setBackground(shape)
         passwordText.setBackground(shape)
+        access_button.setBackground(buttonAccessShape)
 
-        facebook_access.setBackground(buttonFacebookShape)
-        access_button.setBackground(buttonAcessShape)
+        passwordText.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                login()
+                return@OnKeyListener true
+            }
+            false
+        })
 
 
 
         access_button.setOnClickListener {
 
-            val email = userText.text.toString()
-            val password = passwordText.text.toString()
-
-            val list = listOf("email" to email,"password" to password)
-
-            "http://painelgm7club.com.br/user/signin".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
-                val (data, err) = result
-
-                println(data)
-                if (data != null) {
-
-                    mUserBusiness.saveUser(email, password)
-
-                    val intent = Intent(this, MainActivity::class.java )
-                    startActivity(intent)
-                    Toast.makeText(this@LoginActivity, data.user.first_name, Toast.LENGTH_LONG).show()
-                    finish()
-                }
-            }
+            login()
 
         }
 
@@ -123,14 +111,30 @@ class LoginActivity : AppCompatActivity() {
 //            }
 
 //        }
-        facebook_access.setOnClickListener {
-
-
-
-        }
 
 
     }
 
+    private fun login(){
+        val email = userText.text.toString()
+        val password = passwordText.text.toString()
 
+        val list = listOf("email" to email,"password" to password)
+
+        "http://painelgm7club.com.br/user/signin".httpPost(list).responseObject(ResponseData.Deserializer()) { request, response, result ->
+            val (data, err) = result
+
+            println(data)
+            if (data != null) {
+
+                mUserBusiness.saveUser(email, password)
+
+                val intent = Intent(this, MainActivity::class.java )
+                finish()
+                startActivity(intent)
+                Toast.makeText(this@LoginActivity, data.user.first_name, Toast.LENGTH_LONG).show()
+
+            }
+        }
+    }
 }
