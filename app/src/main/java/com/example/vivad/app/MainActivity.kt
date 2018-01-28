@@ -1,13 +1,17 @@
 package com.example.vivad.app
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Button
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import com.example.vivad.app.barcode.BarcodeCaptureActivity
+import com.example.vivad.app.business.UserBusiness
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,12 +22,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val buttonScanShape = GradientDrawable()
+        buttonScanShape.shape = GradientDrawable.RECTANGLE
+                buttonScanShape.setColor(ResourcesCompat.getColor(getResources(), R.color.colorAccessBlue,null))
+        buttonScanShape.cornerRadius = 20F
+
+        scan_barcode_button.setBackground(buttonScanShape)
+
         //result_textview = findViewById(R.id.result_textview)
 
         scan_barcode_button.setOnClickListener {
             val intent = Intent(applicationContext, BarcodeCaptureActivity::class.java)
             startActivityForResult(intent, BARCODE_READER_REQUEST_CODE)
         }
+         button_logout.setOnClickListener {
+
+             val userBusiness = UserBusiness(this)
+             userBusiness.removeUser()
+
+             val intent = Intent(applicationContext, LoginActivity::class.java)
+             startActivity(intent)
+             finish()
+
+
+         }
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

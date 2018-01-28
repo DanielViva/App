@@ -29,4 +29,9 @@ class UserBusiness (context: Context) {
         storeString("UserPassword", password)
     }
 
+    fun removeUser(){
+        removeStoredString("UserEmail")
+        removeStoredString("UserPassword")
+    }
+
 }

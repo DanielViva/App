@@ -52,6 +52,7 @@ class LoginActivity : AppCompatActivity() {
         if (email != "") {
             val intent = Intent(this, MainActivity::class.java )
             startActivity(intent)
+            finish()
         }
 
         val shape = GradientDrawable()
@@ -96,9 +97,8 @@ class LoginActivity : AppCompatActivity() {
 
                     val intent = Intent(this, MainActivity::class.java )
                     startActivity(intent)
-
-
                     Toast.makeText(this@LoginActivity, data.user.first_name, Toast.LENGTH_LONG).show()
+                    finish()
                 }
             }
 
