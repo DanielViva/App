@@ -85,7 +85,15 @@ class MainActivity : AppCompatActivity() {
         var components = qr_code.split(reg)
 
         if (components.count() != 3 ) {
-            toast("Código inválido")
+            alert("Código inválido."){
+                positiveButton("Ok") {}
+                customView {
+                    verticalLayout {
+                        gravity = Gravity.CENTER
+                        imageView(R.drawable.notdone_tick).lparams(300)
+                    }
+                }
+            }.show()
             return
         }
 
@@ -111,16 +119,34 @@ class MainActivity : AppCompatActivity() {
                 if (response.data.isEmpty()) {
                     alert("Erro. Verifique sua conexão."){
                         positiveButton("Ok") {}
+                        customView {
+                            verticalLayout {
+                                gravity = Gravity.CENTER
+                                imageView(R.drawable.notdone_tick).lparams(300)
+                            }
+                        }
                     }.show()
                 } else {
                     val json = JsonParser().parse(String(response.data)).asJsonObject
                     if (json.has("message")) {
                         alert(json["message"].asString){
                             positiveButton("Ok") {}
+                            customView {
+                                verticalLayout {
+                                    gravity = Gravity.CENTER
+                                    imageView(R.drawable.notdone_tick).lparams(300)
+                                }
+                            }
                         }.show()
                     } else {
                         alert("Erro."){
                             positiveButton("Ok") {}
+                            customView {
+                                verticalLayout {
+                                    gravity = Gravity.CENTER
+                                    imageView(R.drawable.notdone_tick).lparams(300)
+                                }
+                            }
                         }.show()
                     }
 
